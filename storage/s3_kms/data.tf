@@ -33,3 +33,5 @@ data "aws_iam_policy_document" "sns_policy" {
     ]
   }
 }
+
+# s3 bucket access policy.

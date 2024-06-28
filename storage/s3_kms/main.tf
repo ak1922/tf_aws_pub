@@ -77,3 +77,31 @@ resource "aws_s3_bucket_policy" "buck_policy" {
   policy = data.aws_iam_policy_document.s3bucket_policy.json
   bucket = aws_s3_bucket.buck.id
 }
+
+resource "aws_s3_bucket_lifecycle_configuration" "main_bucket_lifecycle" {
+  bucket = aws_s3_bucket.buck.id
+
+  rule {
+    id = "${aws_s3_bucket.buck.bucket}-config"
+
+    filter {
+      prefix = ""
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 90
+    }
+
+    noncurrent_version_transition {
+      noncurrent_days = 30
+      storage_class   = "STANDARD_IA"
+    }
+
+    noncurrent_version_transition {
+      noncurrent_days = 60
+      storage_class   = "GLACIER"
+    }
+
+    status = "Enabled"
+  }
+}

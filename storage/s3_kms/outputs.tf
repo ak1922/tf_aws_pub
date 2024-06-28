@@ -13,3 +13,7 @@ output "snstopic_arn" {
 output "topicpolicy_id" {
   value = aws_sns_topic_policy.topic_policy.id
 }
+
+output "buck_policy_id" {
+  value = aws_s3_bucket_policy.buck_policy.id
+}

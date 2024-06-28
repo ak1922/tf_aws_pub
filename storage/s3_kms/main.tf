@@ -36,6 +36,8 @@ resource "aws_iam_role" "assume_role" {
       ]
     }
   )
+
+  tags = local.module_tags
 }
 
 # s3 bucket encryption
@@ -57,5 +59,21 @@ resource "aws_s3_bucket_versioning" "bucket_versioning" {
     status = "Enabled"
   }
 
+  bucket = aws_s3_bucket.buck.id
+}
+
+# Block public access from s3 bucket.
+resource "aws_s3_bucket_public_access_block" "public_block" {
+  restrict_public_buckets = true
+  ignore_public_acls      = true
+  block_public_acls       = true
+  block_public_policy     = true
+
+  bucket = aws_s3_bucket.buck.bucket
+}
+
+# s3 bucket policy.
+resource "aws_s3_bucket_policy" "buck_policy" {
+  policy = data.aws_iam_policy_document.s3bucket_policy.json
   bucket = aws_s3_bucket.buck.id
 }

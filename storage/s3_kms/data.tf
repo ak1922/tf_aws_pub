@@ -35,3 +35,27 @@ data "aws_iam_policy_document" "sns_policy" {
 }
 
 # s3 bucket access policy.
+data "aws_iam_policy_document" "s3bucket_policy" {
+  policy_id = "s3_bucket_access"
+
+  statement {
+    sid = "admin_access"
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/ak"
+      ]
+    }
+
+    effect = "Allow"
+
+    resources = [
+      "arn:aws:s3:::${aws_s3_bucket.buck.bucket}/*"
+    ]
+
+    actions = [
+      "s3:*"
+    ]
+  }
+}
